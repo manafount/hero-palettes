@@ -1,0 +1,20 @@
+{
+  "name": "hero-palettes",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "async": "2.5.0",
+    "marvel-api": "1.1.0",
+    "node-vibrant": "3.0.0-alpha.2",
+    "progress": "2.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.10"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
