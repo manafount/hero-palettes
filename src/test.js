@@ -1,28 +1,28 @@
-let api = require('marvel-api');
-let vibrant = require('node-vibrant');
-var async = require("async");
- 
-let marvel = api.createClient({
-  publicKey: process.env.MARVEL_PUBLIC,
-  privateKey: process.env.MARVEL_PRIVATE
-});
+var fs = require('fs');
+var request = require('request');
+var Promise = require('bluebird');
 
-marvel.characters.findAll(100)
-  .then((res) => {
-    let chars = [];
-    console.log(res.meta.total);
-    res.data.forEach(item => {
-      chars.push({name: item.name, image: item.thumbnail});
-    });
-    return chars;
-  })
-  .then((data) => {
-    console.log(data.length);
-    let imgExt = 'standard_fantastic';
-    let fileExt = '.jpg';
-    // vibrant.from(data[0].image.path.concat(imgExt)).getPalette()
-    //   .then((palette) => console.log(palette));
-  })
-  .fail(console.error)
-  .done();
+let urlList = [
+  { id: 1011163, url: 'http://i.annihil.us/u/prod/marvel/i/mg/5/90/4c002f38d0e05'},
+  { id: 1010716, url: 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available'}
+];
 
+fs.mkdir('test/');
+
+let download = (url, target) => {
+  return new Promise(function (resolve, reject) {
+    request(url).pipe(fs.createWriteStream(target))
+      .on('finish', resolve)
+      .on('error', reject);
+  });
+};
+
+let downloadAll = (urlArray) => {
+  let ext = '/standard_fantastic.jpg';
+  return Promise.all(urlArray.map((item) => {
+      return download(item.url.concat(ext), `test/${item.id}.jpg`);
+  }));
+};
+
+downloadAll(urlList)
+  .then(() => console.log('finished'));
