@@ -9,6 +9,9 @@
 # production
 /build
 
+# character image files
+/src/images
+
 # misc
 .DS_Store
 .env.local
