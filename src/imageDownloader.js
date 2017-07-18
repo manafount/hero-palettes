@@ -1,6 +1,5 @@
 const MarvelApi = require('marvel-api');
 const Promise = require('bluebird');
-const Progress = require('progress');
 const request = require('request');
 const fs = require('fs');
 
@@ -13,7 +12,7 @@ let Marvel = MarvelApi.createClient({
 
 let getAllCharacters = () => {
   const LIMIT = 100;
-  const TOTAL = 1486; //number of characters in marvel API
+  const TOTAL = 1485; //number of characters in marvel API
   let offset = 0;
   let promiseQueue = [];
 
@@ -49,6 +48,8 @@ let downloadAll = (urlArray) => {
   let basePath = 'images/';
   let ext = '/standard_fantastic.jpg'; // 250x250 pixel square images
 
+  //mkdir will throw an error if directory exists
+  //this prevents you from unintentionally redownloading all character images
   fs.mkdir(basePath);
   return Promise.all(urlArray.map((item) => {
       return download(item.url + ext, basePath + item.id + '.jpg');
