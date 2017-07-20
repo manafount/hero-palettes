@@ -9,13 +9,18 @@
     "node-vibrant": "3.0.0-alpha.2",
     "progres": "0.0.0",
     "react": "^15.6.1",
+    "react-autobind": "1.0.6",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "react-scripts": "1.0.10",
+    "semantic-ui-react": "0.71.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "semantic-ui": "2.2.11"
   }
 }
