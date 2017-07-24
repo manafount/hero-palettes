@@ -2,62 +2,79 @@ const MarvelApi = require('marvel-api');
 const Promise = require('bluebird');
 const request = require('request');
 const fs = require('fs');
+const gm = require('gm');
 
-let Marvel = MarvelApi.createClient({
-  // replace these values with your marvel API public and private keys
-  // keys can be generated with your developer account at https://developer.marvel.com/account
-  publicKey: process.env.MARVEL_PUBLIC,
-  privateKey: process.env.MARVEL_PRIVATE
-});
+class ImageDownloader {
 
-let getAllCharacters = () => {
-  const LIMIT = 100;
-  const TOTAL = 1485; //number of characters in marvel API
-  let offset = 0;
-  let promiseQueue = [];
-
-  console.log('Getting character info from Marvel API...');
-  for(let i=0; i<TOTAL; i+=LIMIT) {
-    promiseQueue.push(Marvel.characters.findAll(LIMIT, i));
+  constructor(){
+    this.Marvel = MarvelApi.createClient({
+      // replace these values with your marvel API public and private keys
+      // keys can be generated with your developer account at https://developer.marvel.com/account
+      publicKey: process.env.MARVEL_PUBLIC,
+      privateKey: process.env.MARVEL_PRIVATE
+    });
   }
 
-  return Promise.all(promiseQueue)
+  getAllCharacters() {
+    const LIMIT = 100;
+    const TOTAL = 1485; //number of characters in marvel API
+    let offset = 0;
+    let promiseQueue = [];
+
+    console.log('Getting character info from Marvel API...');
+    for(let i=0; i<TOTAL; i+=LIMIT) {
+      promiseQueue.push(this.Marvel.characters.findAll(LIMIT, i));
+    }
+
+    return Promise.all(promiseQueue)
     .then(values => {
       let characterData = [];
       for(let i=0; i<values.length; i++) {
         characterData = characterData.concat(values[i].data);
       }
-      return characterData.map(c => { return { id: c.id, url: c.thumbnail.path }; });
-    }
-  );
-};
+      return characterData.map(c => { return { id: c.id, name: c.name, url: c.thumbnail.path }; });
+    });
+  }
 
-let download = (url, target) => {
-  return new Promise(function (resolve, reject) {
-    request(url).pipe(fs.createWriteStream(target))
-      .on('finish', () => {
-        console.log('Finished downloading ' + target);
-        resolve();
-      })
-      .on('error', reject);
-  });
-};
+  cleanCorruptImages(basePath) {
+    const IMAGE_NOT_FOUND_SIZE = 97861; // size of placeholder marvel image when character image is not available
+    let allFiles = fs.readdirSync(basePath);
+    let unlinkedFiles = 0;
+    allFiles.forEach(currentItem => {
+      let size = fs.statSync(basePath + currentItem);
+      if (size === 0 || size === IMAGE_NOT_FOUND_SIZE) {
+        fs.unlinkSync(basePath + currentItem);
+        unlinkedFiles++;
+      }
+    });
 
-let downloadAll = (urlArray) => {
-  console.log(`Downloading ${urlArray.length} character images...`);
-  let basePath = 'images/';
-  let ext = '/standard_fantastic.jpg'; // 250x250 pixel square images
+    return unlinkedFiles;
+  }
 
-  //mkdir will throw an error if directory exists
-  //this prevents you from unintentionally redownloading all character images
-  fs.mkdir(basePath);
-  return Promise.all(urlArray.map((item) => {
-      return download(item.url + ext, basePath + item.id + '.jpg');
-  }));
-};
+  download(url, target) {
+    return new Promise(function (resolve, reject) {
+      request(url).pipe(fs.createWriteStream(target))
+        .on('finish', () => {
+          console.log('Finished downloading ' + target);
+          resolve();
+        })
+        .on('error', reject);
+    });
+  }
 
-getAllCharacters()
-.then((data) => {
-  downloadAll(data);
-})
-.then(() => console.log('done!'));
+  downloadAll(urlArray) {
+    console.log(`Downloading ${urlArray.length} character images...`);
+    let basePath = 'images/';
+    let ext = '/standard_fantastic.jpg'; // 250x250 pixel square images
+
+    //mkdir will throw an error if directory exists
+    //this prevents you from unintentionally redownloading all character images
+    fs.mkdir(basePath);
+    return Promise.all(urlArray.map((item) => {
+        return this.download(item.url + ext, basePath + item.id + '.jpg');
+    }));
+  }
+}
+
+module.exports = ImageDownloader;
+
