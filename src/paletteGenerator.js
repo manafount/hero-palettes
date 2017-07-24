@@ -2,7 +2,7 @@ let Vibrant = require('node-vibrant');
 let jsonfile = require('jsonfile');
 let Promise = require('bluebird');
 let MarvelApi = require('marvel-api');
-let readdirAsync = Promise.promisify(require("fs").readdir);
+let fs = require('fs');
 
 let imageDownloader = require('./imageDownloader');
 
@@ -14,41 +14,23 @@ class PaletteGenerator {
   }
 
   generateFromDirectory(basePath) {
-    return readdirAsync(basePath)
-    .then((files) => {
-      // files.length should equal 1485
-      console.log(`Generating ${files.length} palettes...`);
-
-      // Promise.mapSeries(files)
-      let promiseQueue = [];
-      for(let i=0; i<25; i++) {
-        promiseQueue.push(new Promise(Vibrant.from(basePath + files[i])
-        .getPalette()));
-        // .then((palette) => {
-        //   // remove '.jpg' to obtain character id
-        //   let id = files[i].slice(0, -4);
-        //   this.palettes[id] = {id, palette };
-        // }));
-      }
-
-      return Promise.each(promiseQueue, (palette, i) => {
-        // remove '.jpg' to obtain character id
-        let id = files[i].slice(0, -4);
-        this.palettes[id] = {id, palette};
-        console.log('Constructed palette for ' + id + ' ' + palette.Vibrant);
+    return fs.readdir(basePath)
+    .then((filenames) => {
+      return Promise.map(filenames, (filename) => {
+        return this.generateFromFile(basePath, filename);
       });
     });
   }
 
-  genFile(pathToFile) {
-    return function(value) {
-      return new Promise(function(resolve, reject) {
-          setTimeout(function() {
-              console.log('time', time);
-              resolve(time);
-          }, time);
-      });
-    };
+
+  generateFromFile(basePath, filename) {
+    return Vibrant.from(basePath + filename).getPalette()
+    .then(data => {
+      return {
+        id: filename.slice(0, -4),
+        palette: data
+      };
+    });
   }
 
   // quick and dirty fix to merge palette info from images to Marvel API character data
@@ -81,7 +63,7 @@ class PaletteGenerator {
   }
 }
 
-// module.exports = PaletteGenerator;
+module.exports = PaletteGenerator;
 
 let path = './images/';
 let out = './data/palettes.json';
