@@ -82,6 +82,7 @@ module.exports = PaletteGenerator;
 
 // REMOVE THIS
 // Generate palettes and character data and save them as json locally
+
 let path = './images/';
 let out = './data/palettes.json';
 let pg = new PaletteGenerator(out);

@@ -12,14 +12,27 @@ class App extends Component {
     super();
     //randomize initial palette
     this.data = palettes.data;
-    this.initialPalette = this.data[Math.floor(Math.random() * this.data.length)];
+    this.initialPalette = this.pickRandomPalette();
 
     this.state = {
       heroID: this.initialPalette.id,
+      heroName: this.initialPalette.name,
       palette: this.initialPalette.palette
     };
     console.log(this.state.palette);
     autoBind(this);
+  }
+
+
+
+  pickRandomPalette() {
+    let keys = Object.keys(this.data);
+    let randomPalette = {};
+    // some characters do not have image data added yet, only randomly choose complete character palettes
+    while (!randomPalette.palette) {
+      randomPalette = this.data[keys[Math.floor(Math.random() * keys.length)]];
+    }
+    return randomPalette;
   }
 
   render() {
