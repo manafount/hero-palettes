@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
-import { Input, Icon, Menu, Grid, Image, Dropdown } from 'semantic-ui-react';
+import { Input, Icon, Menu, Grid, Dropdown } from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class MainMenu extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {};
     autoBind(this);
   }
 
-  handleItemClick(e, { name }) {
+  handleGenerate(e) {
     e.preventDefault();
-    this.setState({ activeItem: name });
+    this.props.pickRandomPalette();
   }
 
   render() {
-    const { activeItem } = this.state;
     return(
       <Grid.Row>
         <Menu fluid stackable size='huge' attached='top' borderless>
@@ -23,7 +22,7 @@ class MainMenu extends Component {
           <Menu.Item>
             <Input className='icon' icon='search' placeholder='Search Marvel characters...'/>
           </Menu.Item>
-          <Menu.Item name='generate' onClick={this.handleItemClick}>
+          <Menu.Item name='generate' onClick={this.handleGenerate}>
             Generate
           </Menu.Item>
           <Dropdown item text='More'>

@@ -5,6 +5,7 @@ import autoBind from 'react-autobind';
 
 import MainMenu from './Menu';
 import ColorColumn from './ColorColumn';
+import HeroInfo from './HeroInfo';
 import palettes from './data/palettes.json';
 
 class App extends Component {
@@ -12,39 +13,56 @@ class App extends Component {
     super();
     //randomize initial palette
     this.data = palettes.data;
-    this.initialPalette = this.pickRandomPalette();
 
     this.state = {
-      heroID: this.initialPalette.id,
-      heroName: this.initialPalette.name,
-      palette: this.initialPalette.palette
+      heroID: null,
+      heroName: null,
+      palette: null
     };
-    console.log(this.state.palette);
+
     autoBind(this);
   }
 
-
+  componentDidMount() {
+    this.pickRandomPalette();
+  }
 
   pickRandomPalette() {
+    console.log('pickRandomPalette called');
     let keys = Object.keys(this.data);
     let randomPalette = {};
     // some characters do not have image data added yet, only randomly choose complete character palettes
     while (!randomPalette.palette) {
       randomPalette = this.data[keys[Math.floor(Math.random() * keys.length)]];
     }
-    return randomPalette;
+    this.setState({
+      heroID: randomPalette.id,
+      heroName: randomPalette.name,
+      palette: randomPalette.palette
+    });
   }
 
   render() {
-    const cols = Object.keys(this.state.palette).map(color => {
-        return <ColorColumn color={color} rgb={this.state.palette[color]._rgb}/>;
-      }
-    );
+    let cols;
+    if(this.state.palette) {
+      cols = Object.keys(this.state.palette).map(color => {
+        return <ColorColumn key={`cc${color}`} 
+                            color={color} 
+                            rgb={this.state.palette[color] ? this.state.palette[color]._rgb 
+                            : [255, 255, 255]}/>;
+      });
+    }
+
     return (
       <Grid>
-        <MainMenu/>
-        <Grid.Row stretched centered>
-            {cols}
+        <MainMenu pickRandomPalette={this.pickRandomPalette}/>
+        <HeroInfo character={this.state}/>
+        <Grid.Row>
+          <Grid container columns={6} textAlign='center'>
+            <Grid.Row>
+              {cols ? cols : ''}
+            </Grid.Row>
+          </Grid>
         </Grid.Row>
       </Grid>
     );

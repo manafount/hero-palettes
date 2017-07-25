@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Icon } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class ColorColumn extends Component {
@@ -14,13 +14,18 @@ class ColorColumn extends Component {
   }
 
   render() {
-    let rgb = this.props.rgb.join(', ');
-    console.log(this.props);
+    const rgb = this.props.rgb.map(i => Math.round(i));
+    const styles = {backgroundColor: 'rgb(' + rgb.join(', ') + ')',
+                     textAlign: 'center',
+                     paddingLeft: '0px',
+                     paddingRight: '0px'
+                   };
+    console.log(styles);
     return(
-      <Grid.Column width={2}>
+      <Grid.Column>
         {this.props.color}
-        <div style={{backgroundColor: `rgb(${rgb})`, width: 'auto', height: 'auto'}}>
-          Color!
+        <div style={styles}>
+          rgb({rgb.join(', ')})
         </div>
       </Grid.Column>
     );
