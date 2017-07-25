@@ -2,23 +2,31 @@ let Vibrant = require('node-vibrant');
 let jsonfile = require('jsonfile');
 let Promise = require('bluebird');
 let MarvelApi = require('marvel-api');
-let fs = require('fs');
+var fs = Promise.promisifyAll(require("fs"));
 
 let imageDownloader = require('./imageDownloader');
 
 class PaletteGenerator {
 
-  constructor(output) {
+  constructor(output, palettes = {}) {
     this.output = output;
-    this.palettes = {};
+    this.palettes = palettes;
   }
 
   generateFromDirectory(basePath) {
-    return fs.readdir(basePath)
+    return fs.readdirAsync(basePath)
     .then((filenames) => {
+      console.log('Generating ' + filenames.length + ' Vibrant palettes...');
       return Promise.map(filenames, (filename) => {
         return this.generateFromFile(basePath, filename);
       });
+    })
+    .then((data) => {
+      let result = {};
+      data.forEach(obj => {
+        result[obj.id] = obj;
+      });
+      return result;
     });
   }
 
@@ -26,8 +34,9 @@ class PaletteGenerator {
   generateFromFile(basePath, filename) {
     return Vibrant.from(basePath + filename).getPalette()
     .then(data => {
+      let id = parseInt(filename.slice(0, -4));
       return {
-        id: filename.slice(0, -4),
+        id,
         palette: data
       };
     });
@@ -35,23 +44,29 @@ class PaletteGenerator {
 
   // quick and dirty fix to merge palette info from images to Marvel API character data
   // this function should be run after generateFromDirectory
-  mergeCharacterAndPaletteData(charData) {
-    // charData should be an array of objects
+  mergeCharacterAndPaletteData(charData, paletteData) {
     console.log('Merging Character Data with Palette Data...');
-    console.log(this.palettes);
-    for(let i=0; i<charData.length; i++) {
-      let id = charData[i].id;
-      console.log(id);
-      console.log(charData[i].name);
-      this.palettes[id].name = charData.name;
-      // potentially useful for finding and fixing broken image links later on
-      this.palettes[id].url = charData.url;
-    }
+    let mergedData = Object.assign({}, paletteData);
+
+    charData.forEach((char) => {
+      let id = char.id;
+      if (mergedData[id]) {
+        mergedData[id].name = char.name;
+        mergedData[id].url = char.url; // potentially useful for finding and fixing broken image links later on
+      }else{
+        mergedData[id] = {
+          id,
+          name: char.name,
+          url: char.url
+        };
+      }
+    });
+    return mergedData;
   }
 
   writeToFile(json) {
     console.log('Writing data to json file...');
-    if (json === 'undefined') {
+    if (!json) {
       json = this.palettes;
     }
 
@@ -65,21 +80,24 @@ class PaletteGenerator {
 
 module.exports = PaletteGenerator;
 
+// REMOVE THIS
+// Generate palettes and character data and save them as json locally
 let path = './images/';
 let out = './data/palettes.json';
 let pg = new PaletteGenerator(out);
 let imgDown = new imageDownloader();
 let start = Date.now();
 
-pg.generateFromDirectory(path)
-  .then(() => {
-    return imgDown.getAllCharacters();
-  })
-  .then((data) => {
-    pg.mergeCharacterAndPaletteData(data);
-    pg.writeToFile();
-    console.log(`Completed all operations in ${Date.now() - start} ms!`);
-  })
-  .catch(e => {
-    throw e;
-  });
+Promise.all([imgDown.getAllCharacters(), pg.generateFromDirectory(path)])
+.then((data) => {
+  let charData = data[0];
+  let palData = data[1];
+  return pg.mergeCharacterAndPaletteData(charData, palData);
+})
+.then((data) => {
+  pg.writeToFile(data);
+  console.log('Completed all operations in ' + (Date.now() - start) + ' ms.');
+})
+.catch((e) => {
+  console.log(e);
+});
