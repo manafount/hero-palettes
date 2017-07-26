@@ -6,6 +6,7 @@ import autoBind from 'react-autobind';
 import MainMenu from './Menu';
 import ColorColumn from './ColorColumn';
 import HeroInfo from './HeroInfo';
+import CardColumn from './CardColumn';
 import palettes from './data/palettes.json';
 
 class App extends Component {
@@ -17,7 +18,8 @@ class App extends Component {
     this.state = {
       heroID: null,
       heroName: null,
-      palette: null
+      palette: null,
+      imgURL: null
     };
 
     autoBind(this);
@@ -38,7 +40,8 @@ class App extends Component {
     this.setState({
       heroID: randomPalette.id,
       heroName: randomPalette.name,
-      palette: randomPalette.palette
+      palette: randomPalette.palette,
+      imgURL: randomPalette.url + '/standard_fantastic.jpg' // 250x250px square
     });
   }
 
@@ -46,7 +49,7 @@ class App extends Component {
     let cols;
     if(this.state.palette) {
       cols = Object.keys(this.state.palette).map(color => {
-        return <ColorColumn key={`cc${color}`} 
+        return <CardColumn key={`cc${color}`} 
                             color={color} 
                             rgb={this.state.palette[color] ? this.state.palette[color]._rgb 
                             : [255, 255, 255]}/>;
