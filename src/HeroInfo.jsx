@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
-import { Grid, Item, Image, Card} from 'semantic-ui-react';
+import { Image, Card} from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class HeroInfo extends Component {
   constructor(props) {
     super(props);
+    this.state = { hover: false };
     autoBind(this);
+  }
+
+  toggleHover() {
+    this.setState({hover: !this.state.hover});
   }
 
   render() {
     let { heroName, imgURL } = this.props.character;
     let heroMeta = '\n'; //necessary to preserve whitespace and prevent height collapse when meta element is blank
 
-    const reg = /\([^)]*\)/g; //regex matcher for substrings inside paretheses
+    const reg = /\([^)]*\)/; //regex matcher for substrings inside paretheses
     if(heroName.match(reg)) {
       heroMeta = heroName.match(reg)[0];
       heroName = heroName.replace(reg, '');
     }
 
     return(
-      <Card raised>
+      <Card raised={this.state.hover}
+            onMouseEnter={this.toggleHover}
+            onMouseLeave={this.toggleHover}>
         <Image src={imgURL} />
         <Card.Content>
           <Card.Header>

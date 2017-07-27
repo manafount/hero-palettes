@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bluebird": "3.5.0",
+    "defiant": "1.4.2",
     "gm": "1.23.0",
     "jsonfile": "3.0.1",
     "marvel-api": "1.1.0",

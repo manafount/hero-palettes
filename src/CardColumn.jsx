@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
-import { Grid, Card, Icon, Popup, Button } from 'semantic-ui-react';
+import { Grid, Card, Icon, Popup } from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class CardColumn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      popupOpen: false
+      popupOpen: false,
+      hover: false
     };
     autoBind(this);
   }
 
   handleItemClick(e, { name }) {
     e.preventDefault();
+  }
+
+  toggleHover() {
+    this.setState({hover: !this.state.hover});
   }
 
   render() {
@@ -28,7 +33,10 @@ class CardColumn extends Component {
                    };
     return(
       <Grid.Column>
-        <Card raised className={this.props.color}>
+        <Card raised={this.state.hover} 
+              className={this.props.color}
+              onMouseEnter={this.toggleHover}
+              onMouseLeave={this.toggleHover}>
           <Card.Content style={styles}>
           </Card.Content>
           <Card.Content extra>

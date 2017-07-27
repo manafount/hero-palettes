@@ -4,7 +4,6 @@ import './App.css';
 import autoBind from 'react-autobind';
 
 import MainMenu from './Menu';
-import ColorColumn from './ColorColumn';
 import HeroInfo from './HeroInfo';
 import CardColumn from './CardColumn';
 import palettes from './data/palettes.json';
@@ -29,7 +28,6 @@ class App extends Component {
   }
 
   pickRandomPalette() {
-    console.log('pickRandomPalette called');
     const keys = Object.keys(this.data);
     let randomPalette = {};
     // some characters do not have image data added yet, only randomly choose complete character palettes

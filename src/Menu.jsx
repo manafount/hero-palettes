@@ -20,7 +20,7 @@ class MainMenu extends Component {
         <Menu fluid stackable size='huge' attached='top' borderless>
           <Menu.Item header>HeroPalettes</Menu.Item>
           <Menu.Item>
-            <Input className='icon' icon='search' placeholder='Search Marvel characters...'/>
+            <Input className='icon' icon='search' placeholder='Search...'/>
           </Menu.Item>
           <Menu.Item name='generate' onClick={this.handleGenerate}>
             Random
