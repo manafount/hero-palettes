@@ -23,7 +23,7 @@ class MainMenu extends Component {
             <Input className='icon' icon='search' placeholder='Search Marvel characters...'/>
           </Menu.Item>
           <Menu.Item name='generate' onClick={this.handleGenerate}>
-            Generate
+            Random
           </Menu.Item>
           <Dropdown item text='More'>
             <Dropdown.Menu>

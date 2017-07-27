@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Item, Image } from 'semantic-ui-react';
+import { Grid, Item, Image, Card} from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class HeroInfo extends Component {
@@ -12,17 +12,20 @@ class HeroInfo extends Component {
   render() {
     console.log(this.props);
     return(
-      <Grid.Row centered>
-          <Image
-            src={this.props.character.imgURL}
-            as='a' size='medium'
-            href='http://google.com'
-            target='_blank'
-          />
-        <div>
-          {this.props.character.heroName}
-        </div>
-      </Grid.Row>
+      <Card>
+        <Image src={this.props.character.imgURL} />
+        <Card.Content>
+          <Card.Header>
+            {this.props.character.heroName}
+          </Card.Header>
+          <Card.Meta>
+            Hero
+          </Card.Meta>
+          <Card.Description>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in erat rhoncus, pretium nunc ac, egestas ante. Ut fermentum orci ut pretium lacinia.
+          </Card.Description>
+        </Card.Content>
+      </Card>
     );
   }
 }

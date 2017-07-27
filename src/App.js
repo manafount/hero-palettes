@@ -12,7 +12,6 @@ import palettes from './data/palettes.json';
 class App extends Component {
   constructor() {
     super();
-    //randomize initial palette
     this.data = palettes.data;
 
     this.state = {
@@ -31,7 +30,7 @@ class App extends Component {
 
   pickRandomPalette() {
     console.log('pickRandomPalette called');
-    let keys = Object.keys(this.data);
+    const keys = Object.keys(this.data);
     let randomPalette = {};
     // some characters do not have image data added yet, only randomly choose complete character palettes
     while (!randomPalette.palette) {
@@ -41,7 +40,7 @@ class App extends Component {
       heroID: randomPalette.id,
       heroName: randomPalette.name,
       palette: randomPalette.palette,
-      imgURL: randomPalette.url + '/standard_fantastic.jpg' // 250x250px square
+      imgURL: randomPalette.url + '/standard_fantastic.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
     });
   }
 
@@ -59,7 +58,9 @@ class App extends Component {
     return (
       <Grid>
         <MainMenu pickRandomPalette={this.pickRandomPalette}/>
-        <HeroInfo character={this.state}/>
+        <Grid.Row centered>
+          <HeroInfo character={this.state}/>
+        </Grid.Row>
         <Grid.Row>
           <Grid container columns={6} textAlign='center'>
             <Grid.Row>
