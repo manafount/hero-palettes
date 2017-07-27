@@ -26,7 +26,6 @@ class CardColumn extends Component {
                      paddingRight: '0px',
                      height: '30vh'
                    };
-    console.log(styles);
     return(
       <Grid.Column>
         <Card raised className={this.props.color}>

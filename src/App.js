@@ -16,7 +16,7 @@ class App extends Component {
 
     this.state = {
       heroID: null,
-      heroName: null,
+      heroName: '',
       palette: null,
       imgURL: null
     };
