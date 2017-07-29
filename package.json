@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-polyfill": "6.23.0",
     "bluebird": "3.5.0",
     "defiant": "1.4.2",
     "gm": "1.23.0",
     "jsonfile": "3.0.1",
+    "lodash": "4.17.4",
     "marvel-api": "1.1.0",
     "node-vibrant": "3.0.0-alpha.2",
     "progres": "0.0.0",
@@ -24,6 +26,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "performance-now": "2.1.0",
     "semantic-ui": "2.2.11"
   }
 }

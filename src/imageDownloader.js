@@ -52,7 +52,7 @@ class ImageDownloader {
   }
 
   download(url, target) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       request(url).pipe(fs.createWriteStream(target))
         .on('finish', () => {
           console.log('Finished downloading ' + target);

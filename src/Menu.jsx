@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { Input, Icon, Menu, Grid, Dropdown } from 'semantic-ui-react';
+import { Icon, Menu, Grid, Dropdown, Search } from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class MainMenu extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isLoading: false,
+      value: '',
+      results: []
+    };
     autoBind(this);
   }
 
@@ -14,13 +18,42 @@ class MainMenu extends Component {
     this.props.pickRandomPalette();
   }
 
+  
+  handleSearchChange(e) {
+    this.setState({isLoading: true, value: e.target.value});
+    setTimeout(() => {
+      let res = this.props.snapshotSearch(this.state.value).slice(0,3)
+      .map((item) => ({id: item.id, name: item.name, image: item.url}));
+      this.setState({
+        isLoading: false,
+        results: res
+      });
+    }, 300);
+    console.log(this.state.results);
+  }
+
+  handleResultSelect(e, { result }) {
+    this.setState({ value: result.name });
+    this.props.pickPalette(result.id);
+  }
+
   render() {
+    const { isLoading, value, results } = this.state;
+    const resultRenderer = ({ name }) => <div>{name}</div>;
+
     return(
       <Grid.Row>
         <Menu fluid stackable size='huge' attached='top' borderless>
           <Menu.Item header>HeroPalettes</Menu.Item>
           <Menu.Item>
-            <Input className='icon' icon='search' placeholder='Search...'/>
+            <Search
+              loading={isLoading}
+              onResultSelect={this.handleResultSelect}
+              resultRenderer={resultRenderer}
+              onSearchChange={this.handleSearchChange}
+              results={results}
+              value={value}
+            />
           </Menu.Item>
           <Menu.Item name='generate' onClick={this.handleGenerate}>
             Random
