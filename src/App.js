@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Container} from 'semantic-ui-react';
 import './App.css';
 import autoBind from 'react-autobind';
 import Defiant from 'defiant';
@@ -99,21 +99,26 @@ class App extends Component {
     }
 
     return (
-      <Grid>
-        <MainMenu pickRandomPalette={this.pickRandomPalette}
-                  pickPalette={this.pickPalette}
-                  snapshotSearch={this.snapshotSearch}/>
-        <Grid.Row centered>
-          <HeroInfo character={this.state.character}/>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid container columns={6} textAlign='center'>
-            <Grid.Row>
-              {cols ? cols : ''}
-            </Grid.Row>
-          </Grid>
-        </Grid.Row>
-      </Grid>
+      <div>
+        <Container>
+          <MainMenu pickRandomPalette={this.pickRandomPalette}
+                    pickPalette={this.pickPalette}
+                    snapshotSearch={this.snapshotSearch}/>
+        </Container>
+        <Grid container>
+          
+          <Grid.Row centered>
+            <HeroInfo character={this.state.character}/>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid container columns={6} doubling textAlign='center'>
+              <Grid.Row>
+                {cols ? cols : ''}
+              </Grid.Row>
+            </Grid>
+          </Grid.Row>
+        </Grid>
+      </div>
     );
   }
 }

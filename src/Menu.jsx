@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Menu, Grid, Dropdown, Search } from 'semantic-ui-react';
+import { Icon, Menu, Dropdown, Search, Header } from 'semantic-ui-react';
 import autoBind from 'react-autobind';
 
 class MainMenu extends Component {
@@ -41,9 +41,13 @@ class MainMenu extends Component {
     const resultRenderer = ({ name }) => <div>{name}</div>;
 
     return(
-      <Grid.Row>
-        <Menu fluid stackable size='huge' attached='top' borderless>
-          <Menu.Item header>HeroPalettes</Menu.Item>
+      <Menu secondary>
+        <Menu.Item>
+          <Header className='clickable' size='huge' onClick={this.handleGenerate}>
+            HeroPalettes
+          </Header>
+        </Menu.Item>
+        <Menu.Menu position='right'>
           <Menu.Item>
             <Search
               loading={isLoading}
@@ -54,20 +58,17 @@ class MainMenu extends Component {
               value={value}
             />
           </Menu.Item>
-          <Menu.Item name='generate' onClick={this.handleGenerate}>
-            Random
-          </Menu.Item>
           <Dropdown item text='More'>
             <Dropdown.Menu>
-              <Dropdown.Item>Export</Dropdown.Item>
-              <Dropdown.Item>Share</Dropdown.Item>
-              <Dropdown.Item>Hero Info</Dropdown.Item>
+              <Dropdown.Item><Icon name='download'/>Export</Dropdown.Item>
+              <Dropdown.Item><Icon name='share'/>Share</Dropdown.Item>
+              <Dropdown.Item><Icon name='info'/>Hero Info</Dropdown.Item>
+              <Dropdown.Item><Icon name='github'/>Source</Dropdown.Item>
+              <Dropdown.Item><Icon name='linkedin'/>Hire Me!</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <Menu.Item header position='right'><Icon name='github'/></Menu.Item>
-          <Menu.Item header><Icon name='linkedin'/></Menu.Item>
-        </Menu>
-      </Grid.Row>
+        </Menu.Menu>
+      </Menu>
     );
   }
 }

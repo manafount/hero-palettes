@@ -37,22 +37,24 @@ class CardColumn extends Component {
     const colorStyles = { backgroundColor: 'rgb(' + rgb.join(', ') + ')',
                           paddingLeft: '0px',
                           paddingRight: '0px',
-                          height: '30vh'
+                          height: '30vh',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
                         };
-    const textStyles = { position: 'absolute', 
-                         top: '40%', 
-                         left: '40%',
+    const textStyles = { fontSize: '16px',
                          color: (yiq >= 128 ? 'black' : 'white'),
                          visibility: (this.state.hover ? 'visible' : 'hidden')
                        };
 
     return(
-      <Grid.Column>
+      <Grid.Column style={{minWidth: '187px'}}>
         <Card raised={this.state.hover} 
-              className={this.props.color}
-              onMouseEnter={this.toggleHover}
-              onMouseLeave={this.toggleHover}>
-          <Card.Content style={colorStyles}>
+              className={this.props.color}>
+          <Card.Content className='clickable'
+                        style={colorStyles}
+                        onMouseEnter={this.toggleHover}
+                        onMouseLeave={this.toggleHover}>
             <span style={textStyles}>Copy</span>
           </Card.Content>
           <Card.Content extra>

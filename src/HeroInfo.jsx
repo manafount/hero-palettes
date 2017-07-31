@@ -35,9 +35,6 @@ class HeroInfo extends Component {
           <Card.Meta style={{whiteSpace: 'pre-line'}}>
             {heroMeta}
           </Card.Meta>
-          <Card.Description>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in erat rhoncus, pretium nunc ac, egestas ante. Ut fermentum orci ut pretium lacinia.
-          </Card.Description>
         </Card.Content>
       </Card>
     );
