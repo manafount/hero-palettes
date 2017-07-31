@@ -41,7 +41,7 @@ class MainMenu extends Component {
     const resultRenderer = ({ name }) => <div>{name}</div>;
 
     return(
-      <Menu secondary>
+      <Menu secondary stackable>
         <Menu.Item>
           <Header className='clickable' size='huge' onClick={this.handleGenerate}>
             HeroPalettes

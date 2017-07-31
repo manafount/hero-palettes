@@ -106,15 +106,12 @@ class App extends Component {
                     snapshotSearch={this.snapshotSearch}/>
         </Container>
         <Grid container>
-          
           <Grid.Row centered>
             <HeroInfo character={this.state.character}/>
           </Grid.Row>
-          <Grid.Row>
-            <Grid container columns={6} doubling textAlign='center'>
-              <Grid.Row>
-                {cols ? cols : ''}
-              </Grid.Row>
+          <Grid.Row centered>
+            <Grid container columns={6} stackable textAlign='center'>
+              {cols ? cols : ''}
             </Grid>
           </Grid.Row>
         </Grid>

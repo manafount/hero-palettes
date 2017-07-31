@@ -48,7 +48,7 @@ class CardColumn extends Component {
                        };
 
     return(
-      <Grid.Column style={{minWidth: '187px'}}>
+      <Grid.Column mobile={6} tablet={3}>
         <Card raised={this.state.hover} 
               className={this.props.color}>
           <Card.Content className='clickable'
