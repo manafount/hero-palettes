@@ -55,6 +55,7 @@ class App extends Component {
   }
 
   pickPalette(id) {
+    const ph = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/';
     if(this.data[id]) {
       let selection = this.data[id];
       this.setState({
@@ -62,7 +63,7 @@ class App extends Component {
           heroID: selection.id,
           heroName: selection.name,
           palette: selection.palette,
-          imgURL: selection.url + '/standard_fantastic.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
+          imgURL: (selection.url ? selection.url : ph) + '/standard_fantastic.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
         }
       });
     }

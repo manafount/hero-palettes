@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import { Grid, Card, Icon, Popup } from 'semantic-ui-react';
 import autoBind from 'react-autobind';
+import clipboard from 'clipboard';
+import ntc from 'ntc';
 
 class CardColumn extends Component {
   constructor(props) {
     super(props);
     this.state = {
       popupOpen: false,
-      hover: false
+      hover: false,
+      text: null
     };
     autoBind(this);
   }
 
   handleItemClick(e, { name }) {
     e.preventDefault();
+    console.log(name);
   }
 
   toggleHover() {
@@ -25,29 +29,34 @@ class CardColumn extends Component {
     const hex = rgb.map((val) => {
       return ("0" + parseInt(val,10).toString(16)).slice(-2);
     }).join('');
-    const styles = {backgroundColor: 'rgb(' + rgb.join(', ') + ')',
-                     textAlign: 'center',
-                     paddingLeft: '0px',
-                     paddingRight: '0px',
-                     height: '30vh'
-                   };
+    // "Name That Color" makes an educated guess about a color's name based on its hex value
+    const ntcMatch = ntc.name(hex); // => [ rgb value, color name, exact match?]
+    // now we need to figure out whether the text on hover should be white or black based on the
+    // background's YIQ value. https://24ways.org/2010/calculating-color-contrast
+    const yiq = ((rgb[0]*299)+(rgb[1]*587)+(rgb[2]*114))/1000;
+    const colorStyles = { backgroundColor: 'rgb(' + rgb.join(', ') + ')',
+                          paddingLeft: '0px',
+                          paddingRight: '0px',
+                          height: '30vh'
+                        };
+    const textStyles = { position: 'absolute', 
+                         top: '40%', 
+                         left: '40%',
+                         color: (yiq >= 128 ? 'black' : 'white'),
+                         visibility: (this.state.hover ? 'visible' : 'hidden')
+                       };
+
     return(
       <Grid.Column>
         <Card raised={this.state.hover} 
               className={this.props.color}
               onMouseEnter={this.toggleHover}
               onMouseLeave={this.toggleHover}>
-          <Card.Content style={styles}>
+          <Card.Content style={colorStyles}>
+            <span style={textStyles}>Copy</span>
           </Card.Content>
           <Card.Content extra>
-            <a>
-              <Popup
-                trigger={<Icon name='download' />}
-                content='Color added to clipboard!'
-                on='click'
-              />
-            </a>
-            {'#' + hex}
+            <a>{this.state.text ? this.state.text : ntcMatch[1]}</a>
           </Card.Content>
         </Card>
       </Grid.Column>

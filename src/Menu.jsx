@@ -29,7 +29,6 @@ class MainMenu extends Component {
         results: res
       });
     }, 300);
-    console.log(this.state.results);
   }
 
   handleResultSelect(e, { result }) {
