@@ -13,13 +13,11 @@
     "marvel-api": "1.1.0",
     "node-vibrant": "3.0.0-alpha.2",
     "ntc": "0.0.1",
-    "progres": "0.0.0",
     "react": "^15.6.1",
     "react-autobind": "1.0.6",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10",
-    "react-slick": "0.14.11",
-    "semantic-ui-react": "0.71.1"
+    "react-search-bar": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,7 +26,6 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "performance-now": "2.1.0",
-    "semantic-ui": "2.2.11"
+    "performance-now": "2.1.0"
   }
 }
