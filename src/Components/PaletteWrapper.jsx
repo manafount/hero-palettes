@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 
+import MainImage from './MainImage';
 import Palette from './Palette';
 
 class PaletteWrapper extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { 
+      mainImg: null,
+      loading: false
+    };
+
     autoBind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({mainImg: nextProps.imgURL});
   }
 
   render() {
@@ -17,7 +27,6 @@ class PaletteWrapper extends Component {
       pals = Object.keys(palette).map((color, index) => {
         return <Palette key={index}
                         id={index}
-                        
                         color={color} 
                         rgb={palette[color] ? palette[color]._rgb 
                         : [255, 255, 255]}/>;
@@ -27,8 +36,8 @@ class PaletteWrapper extends Component {
     return (
       <section className="palette-body">
         <div className="main-content">
-          <div className="img-main" style={{opacity: "1", transform: "translateY(0%)"}}>
-            <img id="bg-main" src="https://vignette3.wikia.nocookie.net/marveldatabase/images/5/5f/Amazing_Spider-Man_Vol_4_1.6_Textless.jpg/revision/latest/scale-to-width-down/328?cb=20160322173450"/>>
+          <div className="img-main">
+            <MainImage src={this.state.mainImg}/>>
           </div>
         </div>
 

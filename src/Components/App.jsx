@@ -61,7 +61,7 @@ class App extends Component {
           heroID: selection.id,
           heroName: selection.name,
           palette: selection.palette,
-          imgURL: (selection.url ? selection.url : ph) + '/standard_fantastic.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
+          imgURL: (selection.url ? selection.url : ph) + '/portrait_uncanny.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
         }
       });
     }
@@ -79,7 +79,7 @@ class App extends Component {
         heroID: randomPalette.id,
         heroName: randomPalette.name,
         palette: randomPalette.palette,
-        imgURL: randomPalette.url + '/standard_fantastic.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
+        imgURL: randomPalette.url + '/portrait_uncanny.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
       }
     });
   }
@@ -87,11 +87,11 @@ class App extends Component {
   render() {
     let { palette } = this.state.character;
     let cols;
-    
+
     return (
       <div>
         <Header randomPalette={this.pickRandomPalette}/>
-        <PaletteWrapper palette={this.state.character.palette}/>
+        <PaletteWrapper palette={this.state.character.palette} imgURL={this.state.character.imgURL}/>
       </div>
     );
   }

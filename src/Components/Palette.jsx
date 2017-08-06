@@ -33,7 +33,6 @@ class Palette extends Component {
   }
 
   render() {
-    console.log(this.props);
     return(
       <div className="palette palette-loaded" data-clipboard-action="copy" data-clipboard-target={"#color-" + this.props.id}>
         <div className="color-sq" id={"sq-" + this.props.id} style={{ backgroundColor: `rgb(${this.props.rgb})` }}>

@@ -13,6 +13,7 @@ class Menu extends Component {
       <figure className="banner-menu">
         <a href="#"><h2>Hero Palettes</h2></a>
         <div>
+          
           <a href="#" className="dropdown">More</a>
         </div>
       </figure>
