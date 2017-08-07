@@ -10,10 +10,18 @@ class PaletteWrapper extends Component {
 
     this.state = { 
       mainImg: null,
-      loading: false
+      loading: false,
+      appear: false
     };
 
     autoBind(this);
+  }
+
+  componentDidMount() {
+    // trigger first enter animation
+    // setTimeout(() => {
+    //   this.setState({appear: true});
+    // }, 300);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,8 +44,8 @@ class PaletteWrapper extends Component {
     return (
       <section className="palette-body">
         <div className="main-content">
-          <div className="img-main">
-            <MainImage src={this.state.mainImg}/>>
+          <div className={"img-main " + (this.props.loading ? "appear" : "appear")}>
+            <MainImage src={this.state.mainImg} loading={this.props.loading} animateAppear={this.props.animateAppear}/>>
           </div>
         </div>
 

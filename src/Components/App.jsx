@@ -20,7 +20,21 @@ class App extends Component {
         palette: null,
         imgURL: null,
       },
-      snapshot: null
+      prev: {
+        heroID: null,
+        heroName: '',
+        palette: null,
+        imgURL: null,
+      },
+      next: {
+        heroID: null,
+        heroName: '',
+        palette: null,
+        imgURL: null,
+      },
+      snapshot: null,
+      loadingHeader: true,
+      loadingPalette: true
     };
 
     autoBind(this);
@@ -36,6 +50,7 @@ class App extends Component {
 
   componentDidMount() {
     this.pickRandomPalette();
+    this.animateAppear();
   }
 
   getSnapshot() {
@@ -45,6 +60,22 @@ class App extends Component {
     });
   }
 
+  animateHide() {
+    console.log('called hide');
+    this.setState({loadingHeader:true});
+    setTimeout(() => {
+      this.setState({loadingPalette: true});
+    }, 300);
+  }
+
+  animateAppear() {
+    console.log(this.state);
+    this.setState({loadingPalette: false});
+    setTimeout(() => {
+      this.setState({loadingHeader: false});
+    }, 300);
+  }
+
   snapshotSearch(val) {
     let start = now();
     let results = JSON.search(this.state.snapshot, `//*[contains(name, "${val}")]`);
@@ -52,19 +83,55 @@ class App extends Component {
     return results;
   }
 
-  pickPalette(id) {
+  getPaletteData(id) {
     const ph = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/';
     if(this.data[id]) {
       let selection = this.data[id];
-      this.setState({
-        character: {
-          heroID: selection.id,
-          heroName: selection.name,
-          palette: selection.palette,
-          imgURL: (selection.url ? selection.url : ph) + '/portrait_uncanny.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
-        }
-      });
+      return {
+        heroID: selection.id,
+        heroName: selection.name,
+        palette: selection.palette,
+        imgURL: (selection.url ? selection.url : ph) + '/portrait_uncanny.jpg' // other options at https://developer.marvel.com/documentation/images
+      };
+    }else{
+      return null;
     }
+  }
+
+  next() {
+    let current = this.state.character.heroID;
+    let character = this.getPaletteData(current+1);
+    let next = this.getPaletteData(current+2);
+    let prev = this.state.character;
+    this.setState({
+      character: character,
+      next: next,
+      prev: prev
+    });
+  }
+
+  prev() {
+    let current = this.state.character.heroID;
+    let character = this.getPaletteData(current-1);
+    let next = this.state.character;
+    let prev = this.getPaletteData(current-2);
+    this.setState({
+      character: character,
+      next: next,
+      prev: prev
+    });
+  }
+
+  pickPalette(id) {
+    let character = this.getPaletteData(id);
+    let next = this.getPaletteData(id+1);
+    let prev = this.getPaletteData(id-1);
+    this.animateHide();
+    this.setState({
+      character: character,
+      next: next,
+      prev: prev
+    });
   }
 
   pickRandomPalette() {
@@ -74,24 +141,20 @@ class App extends Component {
     while (!randomPalette.palette) {
       randomPalette = this.data[keys[Math.floor(Math.random() * keys.length)]];
     }
-    this.setState({
-      character: {
-        heroID: randomPalette.id,
-        heroName: randomPalette.name,
-        palette: randomPalette.palette,
-        imgURL: randomPalette.url + '/portrait_uncanny.jpg' // 250x250px square. other options at https://developer.marvel.com/documentation/images
-      }
-    });
+    this.pickPalette(randomPalette.id);
   }
 
   render() {
-    let { palette } = this.state.character;
-    let cols;
-
     return (
       <div>
-        <Header randomPalette={this.pickRandomPalette}/>
-        <PaletteWrapper palette={this.state.character.palette} imgURL={this.state.character.imgURL}/>
+        <Header randomPalette={this.pickRandomPalette} 
+                loading={this.state.loadingHeader}
+                next={this.state.next}
+                prev={this.state.prev}/>
+        <PaletteWrapper palette={this.state.character.palette} 
+                        imgURL={this.state.character.imgURL} 
+                        loading={this.state.loadingPalette}
+                        animateAppear={this.animateAppear}/>
       </div>
     );
   }
