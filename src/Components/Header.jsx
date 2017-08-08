@@ -14,20 +14,6 @@ class Header extends Component {
     autoBind(this);
   }
 
-  componentDidMount() {
-    // trigger first page load animation
-
-  }
-
-  loadRandomPalette() {
-    // this.setState({loading: true});
-    // setTimeout(() => {
-    //   this.props.randomPalette();
-    //   this.setState({loading: false});
-    // }, 300);
-  }
-
-
   render() {
     const ph = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/portrait_uncanny.jpg';
 
