@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import Defiant from 'defiant';
-import now from 'performance-now';
 
 import Header from './Header';
 import PaletteWrapper from './PaletteWrapper';
@@ -77,9 +76,7 @@ class App extends Component {
   }
 
   snapshotSearch(val) {
-    let start = now();
     let results = JSON.search(this.state.snapshot, `//*[contains(name, "${val}")]`);
-    console.log('Finished search in ' + (now() - start) + ' ms.');
     return results;
   }
 
@@ -151,8 +148,7 @@ class App extends Component {
                 loading={this.state.loadingHeader}
                 next={this.state.next}
                 prev={this.state.prev}/>
-        <PaletteWrapper palette={this.state.character.palette} 
-                        imgURL={this.state.character.imgURL} 
+        <PaletteWrapper character={this.state.character}
                         loading={this.state.loadingPalette}
                         animateAppear={this.animateAppear}/>
       </div>

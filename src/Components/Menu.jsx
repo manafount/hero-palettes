@@ -11,10 +11,10 @@ class Menu extends Component {
   render() {
     return (
       <figure className="banner-menu">
-        <a href="#"><h2>Hero Palettes</h2></a>
+        <a href="#home"><h2>Hero Palettes</h2></a>
         <div>
           
-          <a href="#" className="dropdown">More</a>
+          <a href="#more" className="dropdown">More</a>
         </div>
       </figure>
     );

@@ -17,20 +17,13 @@ class PaletteWrapper extends Component {
     autoBind(this);
   }
 
-  componentDidMount() {
-    // trigger first enter animation
-    // setTimeout(() => {
-    //   this.setState({appear: true});
-    // }, 300);
-  }
-
   componentWillReceiveProps(nextProps) {
-    this.setState({mainImg: nextProps.imgURL});
+    this.setState({mainImg: nextProps.character.imgURL});
   }
 
   render() {
     let pals;
-    const palette = this.props.palette;
+    const palette = this.props.character.palette;
     if(palette) {
       pals = Object.keys(palette).map((color, index) => {
         return <Palette key={index}
@@ -45,7 +38,10 @@ class PaletteWrapper extends Component {
       <section className="palette-body">
         <div className="main-content">
           <div className={"img-main " + (this.props.loading ? "appear" : "appear")}>
-            <MainImage src={this.state.mainImg} loading={this.props.loading} animateAppear={this.props.animateAppear}/>>
+            <MainImage src={this.state.mainImg} 
+                       heroName={this.props.character.heroName} 
+                       loading={this.props.loading} 
+                       animateAppear={this.props.animateAppear}/>>
           </div>
         </div>
 
