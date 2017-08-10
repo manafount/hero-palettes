@@ -62,13 +62,9 @@ class ImageDownloader {
     });
   }
 
-  downloadAll(urlArray) {
+  downloadAll(urlArray, basePath='images/', ext='') {
     console.log(`Downloading ${urlArray.length} character images...`);
-    let basePath = 'images/';
-    let ext = '/standard_fantastic.jpg'; // 250x250 pixel square images
-
-    //mkdir will throw an error if directory exists
-    //this prevents you from unintentionally redownloading all character images
+    
     fs.mkdir(basePath);
     return Promise.all(urlArray.map((item) => {
         return this.download(item.url + ext, basePath + item.id + '.jpg');

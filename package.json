@@ -27,6 +27,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "performance-now": "2.1.0"
+    "crawler": "1.0.5",
+    "performance-now": "2.1.0",
+    "request": "2.81.0",
+    "request-promise": "4.2.1"
   }
 }

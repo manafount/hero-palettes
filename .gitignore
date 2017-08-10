@@ -5,6 +5,8 @@
 
 # testing
 /coverage
+/src/utils/test
+/src/utils/wikicrawler.js
 /src/utils/test.js
 /src/OldComponents
 
