@@ -7,34 +7,21 @@ import Header from './Header';
 import PaletteWrapper from './PaletteWrapper';
 
 import palettes from '../data/palettes.json';
-import wiki from '../data/wikidata.json';
+import wikidata from '../data/wikidata.json';
 
 
 class App extends Component {
   constructor() {
     super();
-    // this.data = palettes.data;
-    console.log(wiki);
-    this.data = wiki.data;
+    this.sortedIndex = wikidata.sortedIndex;
+    this.data = wikidata.data;
 
     this.state = {
-      character: {
-        heroID: null,
-        heroName: '',
-        palette: null,
-        imgURL: null,
-      },
-      prev: {
-        heroID: null,
-        heroName: '',
-        palette: null,
-        imgURL: null,
-      },
-      next: {
-        heroID: null,
-        heroName: '',
-        palette: null,
-        imgURL: null,
+      currentIndex: 0,
+      characters: {
+        current: this.data[this.sortedIndex[0]],
+        prev: this.data[this.sortedIndex[this.sortedIndex.length - 1]],
+        next: this.data[this.sortedIndex[1]]
       },
       snapshot: null,
       loadingHeader: true,
@@ -85,65 +72,42 @@ class App extends Component {
     return results;
   }
 
-  getPaletteData(id) {
-    const ph = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/';
-    if(this.data[id]) {
-      let selection = this.data[id];
-      let imgURL = selection.img ? selection.img : ph;
-      return {
-        heroID: selection.id,
-        heroName: selection.name,
-        palette: selection.palette,
-        url: selection.url,
-        imgURL: selection.img
-      };
+  next() {
+    if (this.state.currentIndex >= this.sortedIndex.length - 1) {
+      this.pickPalette(this.sortedIndex[0]);
+    }else{
+      this.pickPalette(this.sortedIndex[this.state.currentIndex + 1]);
     }
   }
 
-  next() {
-    let current = this.state.character.heroID;
-    let character = this.getPaletteData(current+1);
-    let next = this.getPaletteData(current+2);
-    let prev = this.state.character;
-    this.setState({
-      character: character,
-      next: next,
-      prev: prev
-    });
-  }
-
   prev() {
-    let current = this.state.character.heroID;
-    let character = this.getPaletteData(current-1);
-    let next = this.state.character;
-    let prev = this.getPaletteData(current-2);
-    this.setState({
-      character: character,
-      next: next,
-      prev: prev
-    });
+    if (this.state.currentIndex > 0) {
+      this.pickPalette(this.sortedIndex[this.state.currentIndex - 1]);
+    }else{
+      this.pickPalette(this.sortedIndex[this.sortedIndex.length - 1]);
+    }
   }
 
   pickPalette(id) {
-    let character = this.getPaletteData(id);
-    let next = this.getPaletteData(id+1);
-    let prev = this.getPaletteData(id-1);
+    let index = this.sortedIndex.indexOf(id);
+    let nextId = index < (this.sortedIndex.length - 1) ? this.sortedIndex[index + 1] : this.sortedIndex[0];
+    let prevId = index > 0 ? this.sortedIndex[index - 1] : this.sortedIndex[this.sortedIndex.length - 1];
     this.animateHide();
     this.setState({
-      character: character,
-      next: next,
-      prev: prev
+      currentIndex: index,
+      characters: {
+        current: this.data[id],
+        next: this.data[nextId],
+        prev: this.data[prevId]
+      }
     });
   }
 
   pickRandomPalette() {
-    const keys = Object.keys(this.data);
-    let randomPalette = {};
-    // some characters do not have image data added yet, only randomly choose complete character palettes
-    while (!randomPalette.palette) {
-      randomPalette = this.data[keys[Math.floor(Math.random() * keys.length)]];
-    }
-    this.pickPalette(randomPalette.id);
+    let indices = this.sortedIndex;
+    console.log(this.state);
+    let randomId = indices[Math.floor(Math.random() * indices.length)];
+    this.pickPalette(randomId);
   }
 
   render() {
@@ -151,9 +115,9 @@ class App extends Component {
       <div>
         <Header randomPalette={this.pickRandomPalette} 
                 loading={this.state.loadingHeader}
-                next={this.state.next}
-                prev={this.state.prev}/>
-        <PaletteWrapper character={this.state.character}
+                next={this.state.characters.next}
+                prev={this.state.characters.prev}/>
+        <PaletteWrapper character={this.state.characters.current}
                         loading={this.state.loadingPalette}
                         animateAppear={this.animateAppear}/>
       </div>

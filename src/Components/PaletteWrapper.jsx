@@ -18,7 +18,7 @@ class PaletteWrapper extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({mainImg: nextProps.character.imgURL});
+    this.setState({mainImg: nextProps.character.img});
   }
 
   render() {
@@ -41,7 +41,7 @@ class PaletteWrapper extends Component {
             <MainImage src={this.state.mainImg} 
                        heroName={this.props.character.heroName} 
                        loading={this.props.loading} 
-                       animateAppear={this.props.animateAppear}/>>
+                       animateAppear={this.props.animateAppear}/>
           </div>
         </div>
 

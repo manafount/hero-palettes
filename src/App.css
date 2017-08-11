@@ -101,12 +101,16 @@ header .content {
 
 .img-left {
   float: left;
+  height: 240px;
+  overflow: hidden;
   transform: translateX(60%);
   opacity: 0;
 }
 
 .img-right {
   float: right;
+  height: 240px;
+  overflow: hidden;
   transform: translateX(-60%);
   opacity: 0;
 }
@@ -125,8 +129,8 @@ header .content {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   display: block;
-  max-width: 240px;
-  max-height: 240px;
+  max-width: 220px;
+  min-height: 240px;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);
 }
 
@@ -180,6 +184,7 @@ header .content {
 
 .img-main img {
   width: 100%;
+  min-height: 260px;
   display: block;
   position: relative;
   z-index: 2;
@@ -190,6 +195,7 @@ header .content {
 
 .img-main #bg-main {
   position: absolute;
+  background: white;
   top: 0;
   left: 0;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2);

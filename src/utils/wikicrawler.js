@@ -6,7 +6,6 @@ let Vibrant = require('node-vibrant');
 let cheerio = require('cheerio');
 let now = require('performance-now');
 let fs = require('fs');
-let wikijson = require('../data/wikidata.json');
 
 class WikiCrawler {
     wikidata(url) {
@@ -28,7 +27,7 @@ class WikiCrawler {
         let charArr = dataArr.map((page) => {
             let img;
             try {
-                img = page.thumbnail.match(/^.*\/latest/)[0]; //clean image url of extra query strings
+                img = page.thumbnail.match(/(^.*(\.jpg|\.png))/)[0]; //clean image url of extra query strings
             }
             catch(err){
                 console.error("Valid image link not supplied by API for " + page.url);
@@ -59,6 +58,7 @@ class WikiCrawler {
     }
 
     getAllPalettes(dataObj) {
+        console.log('Generating Vibrant palettes...');
         return Promise.map(Object.keys(dataObj), (id) => {
             return this.addVibrantPalette(dataObj[id]);
         })
@@ -85,7 +85,7 @@ class WikiCrawler {
         let alphabeticalIndex = this.createSortedIndex(json);
         let obj = {
             timestamp: Date.now(),
-            index: alphabeticalIndex,
+            sortedIndex: alphabeticalIndex,
             data: json
         };
         jsonfile.writeFile('../data/wikidata.json', obj);
@@ -185,4 +185,4 @@ module.exports = WikiCrawler;
 // TEST CASES
 
 let wc = new WikiCrawler;
-wc.bootstrapFromURL('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=250');
+wc.bootstrapFromURL('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=100');

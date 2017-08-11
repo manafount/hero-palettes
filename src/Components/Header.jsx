@@ -31,11 +31,11 @@ class Header extends Component {
             <div className="images-container">
               <div className="bg-images">
                 <div className={"img-left bg-img " + (this.props.loading ? "" : "appear")}>
-                  <img id="bg-left" src={this.props.prev ? this.props.prev.imgURL : ph}
+                  <img id="bg-left" src={this.props.prev ? this.props.prev.img : ph}
                                     alt={this.props.prev ? this.props.prev.heroName : ""} />
                 </div>
                 <div className={"img-right bg-img " + (this.props.loading ? "" : "appear")}>
-                  <img id="bg-right" src={this.props.next ? this.props.next.imgURL : ph}
+                  <img id="bg-right" src={this.props.next ? this.props.next.img : ph}
                                      alt={this.props.next ? this.props.next.heroName : ""} />
                 </div>
               </div>
