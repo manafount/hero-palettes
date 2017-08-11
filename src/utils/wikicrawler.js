@@ -1,27 +1,12 @@
-let Crawler = require('crawler');
 let request = require('request');
 let Promise = require('bluebird');
 let jsonfile = require('jsonfile');
 let Vibrant = require('node-vibrant');
+let now = require('performance-now');
 let fs = require('fs');
+let wikijson = require('../data/wikidata.json');
 
 class WikiCrawler {
-    constructor() {
-        this.imgCrawler = new Crawler({
-            encoding: null,
-            jQuery: false,// set false to suppress warning message.
-            callback: (err, res, done) => {
-                if(err){
-                    console.error(err.stack);
-                }else{
-                    fs.createWriteStream(res.options.filename).write(res.body);
-                }
-                
-                done();
-            }
-        });
-    }
-
     wikidata(url) {
         return new Promise ((resolve, reject) => {
             request(url, (error, response, body) => {
@@ -55,6 +40,26 @@ class WikiCrawler {
         });
     }
 
+    addVibrantPalette(char) {
+        if(char.img) {
+            return Vibrant.from(char.img)
+            .getPalette()
+            .then(pal => {
+            char['palette'] = pal;
+            return char;
+            });
+        }else{
+            char['palette'] = null;
+            return char;
+        }
+    }
+
+    getAllPalettes(data) {
+        return Promise.map(Object.keys(data), (id) => {
+            return this.addVibrantPalette(data[id]);
+        });
+    }
+
     arrToObj(arr) {
         return arr.reduce(function(map, obj) {
             map[obj.id] = obj;
@@ -71,28 +76,54 @@ class WikiCrawler {
         jsonfile.writeFile('../data/wikidata.json', obj);
     }
 
-    findBackupImage(url) {
+    findBackupImages(data) {
+        let queue = [];
+        data.forEach(char => {
+            if(!char.img){
+                queue.push(char);
+            }
+        });
         
+        return Promise.map(queue, (char) => {
+            return this.crawlForImage(char)
+            .then(img => {
+                char.img = img;
+                return char;
+            });
+        });
+    }
+
+    crawlForImage(char) {
+        console.log('I crawled at ' + char.url + ' for another image.');
+        return Promise.resolve('google.com');
+    }
+
+    bootstrapFromURL(url) {
+        let start = now();
+        return this.wikidata('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=250')
+        .then(data => {
+            return this.mapCharacterData(data);
+        })
+        .then(data => {
+            return this.getAllPalettes(data);
+        })
+        .then(arr => {
+            return this.arrToObj(arr);
+        })
+        .then(json => {
+            return this.writeToFile(json);
+        })
+        .then(() => console.log('All operations complete in ' + (now() - start) + ' ms.'));
     }
 }
 
-export default WikiCrawler;
+module.exports = WikiCrawler;
 
 // TEST CASES
-test.queue('http://marvel.wikia.com/wiki/Peter_Parker_(Earth-616');
 
 let wc = new WikiCrawler;
-
-wc.wikidata('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=250')
-.then((data) => {
-    return wc.mapCharacterData(data);
-})
-.then(arr => {
-    return wc.arrToObj(arr);
-})
-.then(palettes => {
-    return wc.writeToFile(palettes);
-});
+let dataArr = Object.keys(wikijson.data).map(id => wikijson.data[id]);
+wc.findBackupImages(dataArr);
 
 
 

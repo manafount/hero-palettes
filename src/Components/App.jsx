@@ -90,19 +90,13 @@ class App extends Component {
     if(this.data[id]) {
       let selection = this.data[id];
       let imgURL = selection.img ? selection.img : ph;
-      return Vibrant.from(imgURL)
-      .getPalette()
-      .then((palette) => {
-        return {
-          heroID: selection.id,
-          heroName: selection.name,
-          palette,
-          url: selection.url,
-          imgURL: selection.img
-        };
-      });
-    }else{
-      return null;
+      return {
+        heroID: selection.id,
+        heroName: selection.name,
+        palette: selection.palette,
+        url: selection.url,
+        imgURL: selection.img
+      };
     }
   }
 
