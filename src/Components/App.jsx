@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import Defiant from 'defiant';
+import Vibrant from 'node-vibrant';
 
 import Header from './Header';
 import PaletteWrapper from './PaletteWrapper';
 
 import palettes from '../data/palettes.json';
+import wiki from '../data/wikidata.json';
+
 
 class App extends Component {
   constructor() {
     super();
-    this.data = palettes.data;
+    // this.data = palettes.data;
+    console.log(wiki);
+    this.data = wiki.data;
 
     this.state = {
       character: {
@@ -84,12 +89,18 @@ class App extends Component {
     const ph = 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available/';
     if(this.data[id]) {
       let selection = this.data[id];
-      return {
-        heroID: selection.id,
-        heroName: selection.name,
-        palette: selection.palette,
-        imgURL: (selection.url ? selection.url : ph) + '/portrait_uncanny.jpg' // other options at https://developer.marvel.com/documentation/images
-      };
+      let imgURL = selection.img ? selection.img : ph;
+      return Vibrant.from(imgURL)
+      .getPalette()
+      .then((palette) => {
+        return {
+          heroID: selection.id,
+          heroName: selection.name,
+          palette,
+          url: selection.url,
+          imgURL: selection.img
+        };
+      });
     }else{
       return null;
     }
