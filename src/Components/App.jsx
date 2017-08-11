@@ -6,7 +6,7 @@ import Vibrant from 'node-vibrant';
 import Header from './Header';
 import PaletteWrapper from './PaletteWrapper';
 
-import palettes from '../data/palettes.json';
+// import marveldata from '../data/marveldata.json';
 import wikidata from '../data/wikidata.json';
 
 
