@@ -1,7 +1,9 @@
 let request = require('request');
+let rp = require('request-promise');
 let Promise = require('bluebird');
 let jsonfile = require('jsonfile');
 let Vibrant = require('node-vibrant');
+let cheerio = require('cheerio');
 let now = require('performance-now');
 let fs = require('fs');
 let wikijson = require('../data/wikidata.json');
@@ -22,22 +24,24 @@ class WikiCrawler {
         });
     }
 
-    mapCharacterData(data) {
-        return data.map((page) => {
+    mapCharacterData(dataArr) {
+        let charArr = dataArr.map((page) => {
             let img;
             try {
                 img = page.thumbnail.match(/^.*\/latest/)[0]; //clean image url of extra query strings
             }
             catch(err){
-                console.error("Couldn't find a valid image link for " + page.url);
+                console.error("Valid image link not supplied by API for " + page.url);
             }
             return {
                 id: page.id,
                 name: page.title,
-                url: 'marvel.wikia.com' + page.url,
+                url: 'https://marvel.wikia.com' + page.url,
                 img
             };
         });
+
+        return this.arrToObj(charArr);
     }
 
     addVibrantPalette(char) {
@@ -54,61 +58,120 @@ class WikiCrawler {
         }
     }
 
-    getAllPalettes(data) {
-        return Promise.map(Object.keys(data), (id) => {
-            return this.addVibrantPalette(data[id]);
+    getAllPalettes(dataObj) {
+        return Promise.map(Object.keys(dataObj), (id) => {
+            return this.addVibrantPalette(dataObj[id]);
+        })
+        .then(arr => {
+            return this.arrToObj(arr);
         });
     }
 
     arrToObj(arr) {
-        return arr.reduce(function(map, obj) {
+        return arr.reduce((map, obj) => {
             map[obj.id] = obj;
             return map;
         }, {});
     }
 
+    objToArr(obj) {
+        return Object.keys(obj).map((id) => {
+            return obj[id];
+        });
+    }
+
     writeToFile(json) {
-        console.log('Writing data to json file...');
+        console.log('Writing ' + Object.keys(json).length + ' items to json file...');
+        let alphabeticalIndex = this.createSortedIndex(json);
         let obj = {
             timestamp: Date.now(),
+            index: alphabeticalIndex,
             data: json
         };
         jsonfile.writeFile('../data/wikidata.json', obj);
     }
 
-    findBackupImages(data) {
+    findBackupImages(dataObj) {
         let queue = [];
-        data.forEach(char => {
-            if(!char.img){
-                queue.push(char);
+        Object.keys(dataObj).forEach(id => {
+            if(!dataObj[id].img){
+                queue.push(dataObj[id]);
             }
         });
-        
+        console.log('Crawling wiki for backup images for ' + queue.length + ' characters...');
         return Promise.map(queue, (char) => {
             return this.crawlForImage(char)
             .then(img => {
+                if(!img) {
+                    console.log("Couldn't find an image for " + char.name + " at " + char.url);
+                }
                 char.img = img;
                 return char;
             });
+        })
+        .then(res => {
+            let resObj = this.arrToObj(res);
+            let mergedObj =  Object.assign({}, dataObj, resObj);
+            return this.deleteNoImage(mergedObj);
         });
     }
 
     crawlForImage(char) {
-        console.log('I crawled at ' + char.url + ' for another image.');
-        return Promise.resolve('google.com');
+        return new Promise((resolve, reject) => {
+            rp
+            .get(char.url)
+            .then(response => {
+                let $ = cheerio.load(response);
+                let imgURL = $('.pi-image-thumbnail').attr('src');
+                resolve(imgURL);
+            })
+            .catch(err => console.error(err));
+        });
+    }
+
+    // Some pages don't have any valid images to choose from. Delete those from our saved data.
+    deleteNoImage(dataObj) {
+        let idsToDelete = [];
+        for(let id in dataObj) {
+            let char = dataObj[id];
+            if(!char.img) {
+                idsToDelete.push(id);
+            }
+        }
+        console.log('Deleting ' + idsToDelete.length + ' items with no available image.');
+        idsToDelete.forEach(id => delete dataObj[id]);
+        return dataObj;
+    }
+
+    createSortedIndex(dataObj) {
+        let sorted = 
+            this.objToArr(dataObj)
+            .sort((a, b) => {
+                let nameA = a.name.toLowerCase();
+                let nameB = b.name.toLowerCase();
+
+                if(nameA > nameB) {
+                    return 1;
+                }else if(nameB > nameA) {
+                    return -1;
+                }else{
+                    return 0;
+                }
+            });
+        return sorted.map(el => el.id);
     }
 
     bootstrapFromURL(url) {
         let start = now();
-        return this.wikidata('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=250')
-        .then(data => {
-            return this.mapCharacterData(data);
+        return this.wikidata(url)
+        .then(dataArr => {
+            return this.mapCharacterData(dataArr);
         })
-        .then(data => {
-            return this.getAllPalettes(data);
+        .then(dataObj => {
+            return this.findBackupImages(dataObj);
         })
-        .then(arr => {
-            return this.arrToObj(arr);
+        .then(dataObj => {
+            return this.getAllPalettes(dataObj);
         })
         .then(json => {
             return this.writeToFile(json);
@@ -122,12 +185,4 @@ module.exports = WikiCrawler;
 // TEST CASES
 
 let wc = new WikiCrawler;
-let dataArr = Object.keys(wikijson.data).map(id => wikijson.data[id]);
-wc.findBackupImages(dataArr);
-
-
-
-// imgCrawler.queue({
-//     uri:"https://nodejs.org/static/images/logos/nodejs-1920x1200.png",
-//     filename:"./test/nodejs-1920x1200.png"
-// });
+wc.bootstrapFromURL('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=250');
