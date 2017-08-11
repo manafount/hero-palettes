@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import Defiant from 'defiant';
-import Vibrant from 'node-vibrant';
+import keydown from 'react-keydown';
 
 import Header from './Header';
 import PaletteWrapper from './PaletteWrapper';
 
 // import marveldata from '../data/marveldata.json';
 import wikidata from '../data/wikidata.json';
-
 
 class App extends Component {
   constructor() {
@@ -44,6 +43,13 @@ class App extends Component {
     this.animateAppear();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { keydown: { event } } = nextProps;
+    if ( event ) {
+      event.which === 37 ? this.loadPrev() : this.loadNext();
+    }
+  }
+
   getSnapshot() {
     return new Promise((resolve) => {
       let snapshot = Defiant.getSnapshot(this.data);
@@ -72,7 +78,7 @@ class App extends Component {
     return results;
   }
 
-  next() {
+  loadNext() {
     if (this.state.currentIndex >= this.sortedIndex.length - 1) {
       this.pickPalette(this.sortedIndex[0]);
     }else{
@@ -80,7 +86,7 @@ class App extends Component {
     }
   }
 
-  prev() {
+  loadPrev() {
     if (this.state.currentIndex > 0) {
       this.pickPalette(this.sortedIndex[this.state.currentIndex - 1]);
     }else{
@@ -125,4 +131,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default keydown('left', 'right')(App);
