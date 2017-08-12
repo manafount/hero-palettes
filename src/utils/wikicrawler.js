@@ -64,6 +64,9 @@ class WikiCrawler {
         })
         .then(arr => {
             return this.arrToObj(arr);
+        })
+        .then(obj => {
+            return this.deleteBadPalettes(dataObj);
         });
     }
 
@@ -139,6 +142,21 @@ class WikiCrawler {
             }
         }
         console.log('Deleting ' + idsToDelete.length + ' items with no available image.');
+        idsToDelete.forEach(id => delete dataObj[id]);
+        return dataObj;
+    }
+
+    deleteBadPalettes(dataObj) {
+        let idsToDelete = [];
+        for(let id in dataObj) {
+            let { palette } = dataObj[id];
+            let emptyPals = Object.keys(palette).map(pal => palette[pal]).filter(pal => !pal);
+            if(emptyPals.length > 1) {
+                console.log(dataObj[id].name + ' had ' + emptyPals.length + ' empty palette swatches.');
+                idsToDelete.push(id);
+            }
+        }
+        console.log('Deleting ' + idsToDelete.length + ' items with too much empty palette data');
         idsToDelete.forEach(id => delete dataObj[id]);
         return dataObj;
     }
