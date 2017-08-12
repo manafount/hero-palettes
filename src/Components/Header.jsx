@@ -6,7 +6,7 @@ import Menu from './Menu';
 class Header extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
       loading: false
     };
@@ -24,7 +24,7 @@ class Header extends Component {
           </div>
           <Menu/>
           <div className="content">
-            <h2>Marvel heroes sit dolor comics amet.</h2>
+            <h2>Make your next design Heroic</h2>
             <div className="try-random">
               <a href="#randomize" onClick={this.props.randomPalette}>Try a random image</a>
             </div>
