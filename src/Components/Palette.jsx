@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import ntc from 'ntc';
+import Clipboard from 'clipboard';
 
 class Palette extends Component {
   constructor(props) {
@@ -15,6 +16,10 @@ class Palette extends Component {
     };
 
     autoBind(this);
+  }
+
+  componentDidMount() {
+    new Clipboard('.copy');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,12 +44,14 @@ class Palette extends Component {
           <div className="copied" id={"copied-" + this.props.id} style={{ color: "black" }}>
             <span className="icon canva-icon-tick" aria-hidden="true"></span>
           </div>
-          <div className="copy" id={"copy-" + this.props.id} style={{color: this.state.textColor}}>
+          <div className="copy" id={"copy-" + this.props.id} 
+                                style={{color: this.state.textColor}} 
+                                data-clipboard-text={'#' + this.state.colorHex}>
             <span>Copy</span>
           </div>
         </div>
         <div className="color-name">{this.state.colorName}</div>
-        <div className="color-hex" id={"color-" + this.props.id}>{'#' + this.state.colorHex}</div>
+        <div className="color-hex" id={"color-hex-" + this.props.id}>{'#' + this.state.colorHex}</div>
       </div>
     );
   }
