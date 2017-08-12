@@ -34,7 +34,6 @@ class App extends Component {
     this.getSnapshot()
     .then(snap => {
       this.setState({snapshot: snap});
-      console.log('Snapshot loaded');
     });
   }
 
@@ -58,7 +57,6 @@ class App extends Component {
   }
 
   animateHide() {
-    console.log('called hide');
     this.setState({loadingHeader:true});
     setTimeout(() => {
       this.setState({loadingPalette: true});
@@ -66,7 +64,6 @@ class App extends Component {
   }
 
   animateAppear() {
-    console.log(this.state);
     this.setState({loadingPalette: false});
     setTimeout(() => {
       this.setState({loadingHeader: false});
@@ -111,7 +108,6 @@ class App extends Component {
 
   pickRandomPalette() {
     let indices = this.sortedIndex;
-    console.log(this.state);
     let randomId = indices[Math.floor(Math.random() * indices.length)];
     this.pickPalette(randomId);
   }
