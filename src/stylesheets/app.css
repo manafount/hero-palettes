@@ -96,7 +96,19 @@ header .content {
   text-align: center;
   position: relative;
   transition: all 0.3s ease;
+  display: flex;
 }
+
+.left-button, .right-button {
+  align-self: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.left-button:hover, .right-button:hover {
+  cursor: pointer
+}
+
 
 .img-left {
   float: left;

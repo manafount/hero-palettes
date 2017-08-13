@@ -6,7 +6,7 @@ import Menu from './Menu';
 class Header extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       loading: false
     };
@@ -30,13 +30,19 @@ class Header extends Component {
             </div>
             <div className="images-container">
               <div className="bg-images">
+                <div className='left-button' onClick={this.props.loadPrev}>
+                  <i className="fa fa-chevron-left"/>
+                </div>
                 <div className={"img-left bg-img " + (this.props.loading ? "" : "appear")}>
-                  <img id="bg-left" src={this.props.prev ? this.props.prev.img : ph}
-                                    alt={this.props.prev ? this.props.prev.heroName : ""} />
+                  <img id="bg-left" src={this.props.prevChar ? this.props.prevChar.img : ph}
+                                    alt={this.props.prevChar ? this.props.prevChar.heroName : ""} />
                 </div>
                 <div className={"img-right bg-img " + (this.props.loading ? "" : "appear")}>
-                  <img id="bg-right" src={this.props.next ? this.props.next.img : ph}
-                                     alt={this.props.next ? this.props.next.heroName : ""} />
+                  <img id="bg-right" src={this.props.nextChar ? this.props.nextChar.img : ph}
+                                     alt={this.props.nextChar ? this.props.nextChar.heroName : ""} />
+                </div>
+                <div className='right-button' onClick={this.props.loadNext}>
+                  <i className="fa fa-chevron-right"/>
                 </div>
               </div>
             </div>

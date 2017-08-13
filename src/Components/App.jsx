@@ -117,8 +117,10 @@ class App extends Component {
       <div>
         <Header randomPalette={this.pickRandomPalette} 
                 loading={this.state.loadingHeader}
-                next={this.state.characters.next}
-                prev={this.state.characters.prev}/>
+                loadNext={this.loadNext}
+                loadPrev={this.loadPrev}
+                nextChar={this.state.characters.next}
+                prevChar={this.state.characters.prev}/>
         <PaletteWrapper character={this.state.characters.current}
                         loading={this.state.loadingPalette}
                         animateAppear={this.animateAppear}/>
