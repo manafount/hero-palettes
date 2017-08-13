@@ -48,6 +48,7 @@ header .content {
 
 .content .try-random {
   text-align: center;
+  text-decoration: underline;
   margin: 0 auto;
   width: 200px;
 }
@@ -281,7 +282,7 @@ header .content {
   stroke-width: 2;
   stroke-miterlimit: 10;
   fill: none;
-  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) forwards;
 }
 
 .checkmark {
@@ -292,14 +293,14 @@ header .content {
   stroke-width: 2;
   stroke-miterlimit: 10;
   margin: 15% auto;
-  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .5s both;
 }
 
 .checkmark-check {
   transform-origin: 50% 50%;
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
-  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.4s forwards;
 }
 
 @keyframes stroke {
