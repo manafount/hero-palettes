@@ -249,9 +249,13 @@ header .content {
   text-decoration: underline;
 }
 
-.color-chart {
+.graph-container {
   width: 260px;
   margin: 0 auto;
+}
+
+.color-chart {
+  width: 260px;
 }
 
 .copy span {

@@ -4,6 +4,7 @@ import autoBind from 'react-autobind';
 import MainImage from './MainImage';
 import Palette from './Palette';
 import PieChart from './Pie';
+import mask from '../images/mask.svg';
 
 class PaletteWrapper extends Component {
   constructor(props) {
@@ -82,7 +83,9 @@ class PaletteWrapper extends Component {
             {swatches}
           </div>
         :
-          <PieChart slices={slices}/>
+          <div className="graph-container">
+            <PieChart slices={slices}/>
+          </div>
         )}
       </section>
     );
