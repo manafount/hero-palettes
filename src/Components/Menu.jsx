@@ -10,7 +10,7 @@ class Menu extends Component {
 
   render() {
     return (
-      <figure className="banner-menu">
+      <figure className="banner-menu" style={{color: this.props.textColor}}>
         <a href="#home"><h2>Hero Palettes</h2></a>
         <div>
           

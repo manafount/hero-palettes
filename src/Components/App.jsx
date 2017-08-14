@@ -113,10 +113,22 @@ class App extends Component {
   }
 
   render() {
+    let bgColor;
+    if(this.state.characters.current.palette) {
+      let { palette } = this.state.characters.current;
+      let max = 0;
+      for (let color in palette) {
+        if (palette[color] && palette[color]._population > max) {
+          max = palette[color]._population;
+          bgColor = palette[color]._rgb.map(Math.round);
+        }
+      }
+    }
     return (
       <div>
         <Header randomPalette={this.pickRandomPalette} 
                 loading={this.state.loadingHeader}
+                bgColor={bgColor}
                 loadNext={this.loadNext}
                 loadPrev={this.loadPrev}
                 nextChar={this.state.characters.next}

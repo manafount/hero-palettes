@@ -39,7 +39,7 @@ class Palette extends Component {
   render() {
     const rgb = this.props.rgb.map(i => Math.round(i)); // avoid rounding errors from palette generation
     const yiq = ((rgb[0]*299)+(rgb[1]*587)+(rgb[2]*114))/1000; // calculate 'luminosity' of bg color
-    const textColor = (yiq >= 175 ? 'grey' : 'white');
+    const textColor = (yiq >= 175 ? 'black' : 'white');
     //Name That Color requires a hex code as input, so we convert from rgb to hex here
     const hex = rgb.map((val) => {
       return ("0" + parseInt(val,10).toString(16)).slice(-2);
