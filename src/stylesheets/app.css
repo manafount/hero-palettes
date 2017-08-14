@@ -12,8 +12,9 @@ header {
 
 header .container {
   height: 100%;
-  background: #00C4CC;
-  background: linear-gradient(140deg, #00C4CC 25%, #6E44BD);
+  background: #780206;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #061161, #780206);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #061161, #780206); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   color: white;
 }
 
@@ -356,6 +357,10 @@ header .content {
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 10px;
     transition: all 0.3s ease
+  }
+
+  .checkmark {
+    margin: 7% auto;
   }
 }
 

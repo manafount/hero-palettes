@@ -24,7 +24,7 @@ class Header extends Component {
           </div>
           <Menu/>
           <div className="content">
-            <h2>Make your next design Heroic</h2>
+            <h2>Make your next design <i>Heroic</i></h2>
             <div className="try-random">
               <a href="#randomize" onClick={this.props.randomPalette}>Try a random image</a>
             </div>
