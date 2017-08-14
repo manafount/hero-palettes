@@ -233,6 +233,28 @@ header .content {
   border: 1px solid #ECECEC; 
 }
 
+.tabs {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 20px 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.tabs li {
+  color: #3F4652;
+  cursor: pointer;
+}
+
+.tabs li.selected {
+  text-decoration: underline;
+}
+
+.color-chart {
+  width: 260px;
+  margin: 0 auto;
+}
+
 .copy span {
   position: absolute;
   top: 50%;

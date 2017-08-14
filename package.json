@@ -19,6 +19,7 @@
     "react-keydown": "1.9.1",
     "react-scripts": "1.0.10",
     "react-search-bar": "2.1.1",
+    "react-simple-pie-chart": "0.4.1",
     "react-transition-group": "2.2.0"
   },
   "scripts": {
