@@ -45,13 +45,10 @@ class PaletteWrapper extends Component {
                         rgb={palette[color] ? palette[color]._rgb 
                         : [255, 255, 255]}/>;
       });
-      let totalPop = Object.keys(palette).reduce((sum, color) => {
-        return sum + (palette[color] ? palette[color]._population : 0);
-      }, 0);
       slices = Object.keys(palette).map((color, index) => {
-        if (palette[color]) {
+        if (palette[color] && palette[color]._population > 0) {
           return { color: `rgb(${palette[color]._rgb.join(',')})`,
-                   value: ( totalPop / palette[color]._population )
+                   value: Math.round(Math.log(palette[color]._population))
                  };
         }else{
           return { color: "#fff", value: 0 };
