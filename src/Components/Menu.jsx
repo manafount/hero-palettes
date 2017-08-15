@@ -13,8 +13,7 @@ class Menu extends Component {
       <figure className="banner-menu" style={{color: this.props.textColor}}>
         <a href="#home"><h2>Hero Palettes</h2></a>
         <div>
-          
-          <a href="#more" className="dropdown">More</a>
+
         </div>
       </figure>
     );
