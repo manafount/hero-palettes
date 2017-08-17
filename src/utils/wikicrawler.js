@@ -11,7 +11,7 @@ class WikiCrawler {
     wikidata(url) {
         return new Promise ((resolve, reject) => {
             request(url, (error, response, body) => {
-                console.log('getting popular character articles from marvel.wikia.com...');
+                console.log('Getting character pages from ' + url);
                 if(error) {
                     reject(error); 
                 }
@@ -203,4 +203,4 @@ module.exports = WikiCrawler;
 // TEST CASES
 
 let wc = new WikiCrawler;
-wc.bootstrapFromURL('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=100');
+wc.bootstrapFromURL('http://marvel.wikia.com/api/v1/Articles/Top?expand=1&namespaces=0&category=Characters&limit=150');
