@@ -19,7 +19,7 @@ class Palette extends Component {
   }
 
   componentDidMount() {
-    new Clipboard('.palette-loaded');
+    new Clipboard('.palette');
   }
 
   handleCopy(e) {
@@ -55,7 +55,7 @@ class Palette extends Component {
     };
 
     return(
-      <div className="palette palette-loaded" 
+      <div className="palette"
            data-clipboard-text={'#' + hex}
            onClick={this.handleCopy}>
         <div className="color-sq" id={"sq-" + this.props.id} style={{ backgroundColor: `rgb(${this.props.rgb})` }}>

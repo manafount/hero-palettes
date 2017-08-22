@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import MainImage from './MainImage';
 import Palette from './Palette';
@@ -33,18 +34,25 @@ class PaletteWrapper extends Component {
     this.setState({tab: "graph"});
   }
 
-  render() {
+  renderSwatches() {
     let swatches;
-    let slices = {};
     let palette = this.props.character.palette;
     if(palette) {
       swatches = Object.keys(palette).map((color, index) => {
-        return <Palette key={index}
-                        id={index}
-                        color={color} 
-                        rgb={palette[color] ? palette[color]._rgb 
-                        : [255, 255, 255]}/>;
+      return <Palette key={'palette' + index}
+                      id={index}
+                      color={color} 
+                      rgb={palette[color] ? palette[color]._rgb 
+                      : [255, 255, 255]}/>;
       });
+    }
+    return swatches;
+  }
+
+  renderGraph() {
+    let slices = {};
+    let palette = this.props.character.palette;
+    if(palette) {
       slices = Object.keys(palette).map((color, index) => {
         if (palette[color] && palette[color]._population > 0) {
           return { color: `rgb(${palette[color]._rgb.join(',')})`,
@@ -55,6 +63,11 @@ class PaletteWrapper extends Component {
         }
       });
     }
+
+    return <PieChart slices={slices}/>;
+  }
+
+  render() {
     const currentTab = this.state.tab;
     return (
       <section className="palette-body">
@@ -78,12 +91,19 @@ class PaletteWrapper extends Component {
           </li>
         </ul>
         {(currentTab === "swatches" ?
-          <div className="palette-wrapper">
-            {swatches}
-          </div>
+          <ReactCSSTransitionGroup 
+            component="div" 
+            className="palette-wrapper"
+            transitionName="swatch"
+            transitionAppear={true}
+            transitionAppearTimeout={500}
+            transitionEnter={false}
+            transitionLeave={false}>
+            {this.renderSwatches()}
+          </ReactCSSTransitionGroup>
         :
           <div className="graph-container">
-            <PieChart slices={slices}/>
+            {this.renderGraph()}
           </div>
         )}
       </section>

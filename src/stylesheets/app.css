@@ -215,15 +215,24 @@ header .content {
   background-color: #FDFDFD;
   padding: 10px;
   border-radius: 3px;
-  opacity: 0;
+  /* opacity: 0; */
   border: 1px solid #FDFDFD;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   max-width: 105px;
 }
 
-.palette-loaded {
-  opacity: 1;
+.swatch-appear {
+  opacity: 0.01;
 }
+
+.swatch-appear.swatch-appear-active {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* .palette-loaded {
+  opacity: 1;
+} */
 
 .palette:hover {
   box-shadow: 0 0 5px 0 rgba(23, 23, 23, 0.15);
