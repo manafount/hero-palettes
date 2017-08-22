@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import Lightbox from 'react-images';
 
 import MainImage from './MainImage';
 import Palette from './Palette';
@@ -13,6 +14,7 @@ class PaletteWrapper extends Component {
       mainImg: null,
       loading: false,
       appear: false,
+      lightBoxIsOpen: false,
       tab: 'swatches'
     };
 
@@ -31,6 +33,14 @@ class PaletteWrapper extends Component {
   handleGraphTab(e) {
     e.preventDefault();
     this.setState({tab: "graph"});
+  }
+
+  openLightBox() {
+    this.setState({lightBoxIsOpen: true});
+  }
+
+  closeLightbox() {
+    this.setState({lightBoxIsOpen: false});
   }
 
   renderSwatches() {
@@ -68,17 +78,38 @@ class PaletteWrapper extends Component {
 
   render() {
     const currentTab = this.state.tab;
+
     return (
       <section className="palette-body">
+        <div>
+          {this.state.mainImg ? 
+            <Lightbox
+              currentImage={0}
+              images={[
+                { src: this.state.mainImg,
+                  srcset: [
+                    this.state.mainImg + '/revision/latest/scale-to-width-down/600 600w',
+                    this.state.mainImg + '/revision/latest/scale-to-width-down/300 300w'
+                  ]
+                }
+              ]}
+              isOpen={this.state.lightBoxIsOpen}
+              onClose={this.closeLightbox}
+              showImageCount={false}
+            />
+          :
+          ""}
+        </div>
         <div className="main-content">
           <div className={"img-main " + (this.props.loading ? "appear" : "appear")}>
-            <MainImage src={this.state.mainImg} 
-                       heroName={this.props.character.heroName} 
-                       loading={this.props.loading} 
-                       animateAppear={this.props.animateAppear}/>
+            <a href="#lightbox" onClick={this.openLightBox}>
+              <MainImage src={this.state.mainImg} 
+                        heroName={this.props.character.heroName} 
+                        loading={this.props.loading} 
+                        animateAppear={this.props.animateAppear}/>
+            </a>
           </div>
         </div>
-
         <ul className="tabs">
           <li className={"swatches-tab " + (currentTab === "swatches" ? "selected" : "")}
               onClick={this.handleSwatchTab}>
