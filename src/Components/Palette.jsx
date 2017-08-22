@@ -21,6 +21,10 @@ class Palette extends Component {
 
   componentDidMount() {
     new Clipboard('.palette');
+    this.animateEnter();
+  }
+
+  animateEnter() {
     this.setState({
       appearTimeout: setTimeout(() => {
         this.setState({loading: false});
@@ -34,11 +38,7 @@ class Palette extends Component {
     }else{
       clearTimeout(this.state.appearTimeout); 
       this.setState({loading: true});
-      this.setState({
-        appearTimeout: setTimeout(() => {
-          this.setState({loading: false});
-        }, 150 * this.props.id)
-      });
+      this.animateEnter();
     }
   }
 
