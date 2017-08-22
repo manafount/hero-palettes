@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 import MainImage from './MainImage';
 import Palette from './Palette';
@@ -41,7 +40,7 @@ class PaletteWrapper extends Component {
       swatches = Object.keys(palette).map((color, index) => {
       return <Palette key={'palette' + index}
                       id={index}
-                      color={color} 
+                      color={color}
                       rgb={palette[color] ? palette[color]._rgb 
                       : [255, 255, 255]}/>;
       });
@@ -91,16 +90,9 @@ class PaletteWrapper extends Component {
           </li>
         </ul>
         {(currentTab === "swatches" ?
-          <ReactCSSTransitionGroup 
-            component="div" 
-            className="palette-wrapper"
-            transitionName="swatch"
-            transitionAppear={true}
-            transitionAppearTimeout={500}
-            transitionEnter={false}
-            transitionLeave={false}>
+          <div className="palette-wrapper">
             {this.renderSwatches()}
-          </ReactCSSTransitionGroup>
+          </div>
         :
           <div className="graph-container">
             {this.renderGraph()}

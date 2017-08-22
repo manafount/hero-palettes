@@ -10,9 +10,10 @@ class Palette extends Component {
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       checkmark: false,
-      timeout: null
+      appearTimeout: null,
+      copyTimeout: null
     };
 
     autoBind(this);
@@ -20,20 +21,40 @@ class Palette extends Component {
 
   componentDidMount() {
     new Clipboard('.palette');
+    this.setState({
+      appearTimeout: setTimeout(() => {
+        this.setState({loading: false});
+      }, 100 * this.props.id)
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.rgb === this.props.rgb) {
+      return;
+    }else{
+      clearTimeout(this.state.appearTimeout); 
+      this.setState({loading: true});
+      this.setState({
+        appearTimeout: setTimeout(() => {
+          this.setState({loading: false});
+        }, 150 * this.props.id)
+      });
+    }
   }
 
   handleCopy(e) {
     this.setState({ checkmark: true });
-    clearTimeout(this.state.timeout);
+    clearTimeout(this.state.copyTimeout);
     this.setState({
-      timeout: setTimeout(() => {
+      copyTimeout: setTimeout(() => {
         this.setState({checkmark: false});
       }, 1500)
     });
   }
 
   componentWillUnmount() {
-    clearTimeout(this.state.timeout);
+    clearTimeout(this.state.copyTimeout);
+    clearTimeout(this.state.appearTimeout);   
   }
 
   render() {
@@ -55,7 +76,7 @@ class Palette extends Component {
     };
 
     return(
-      <div className="palette"
+      <div className={'palette ' + (this.state.loading ? '' : 'palette-appear')}
            data-clipboard-text={'#' + hex}
            onClick={this.handleCopy}>
         <div className="color-sq" id={"sq-" + this.props.id} style={{ backgroundColor: `rgb(${this.props.rgb})` }}>
